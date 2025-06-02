@@ -6,6 +6,7 @@
 *.dylib
 bin/*
 build/*
+vendor/*
 .buildnum
 
 # Test binary, built with `go test -c`
