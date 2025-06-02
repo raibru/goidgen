@@ -32,7 +32,7 @@
       "type": "go",
       "request": "launch",
       "mode": "debug",
-      "program": "pktdump.go",
+      "program": "goidgen.go",
       "args": [
         "-h"
       ]
@@ -42,22 +42,9 @@
       "type": "go",
       "request": "launch",
       "mode": "debug",
-      "program": "pktdump.go",
+      "program": "goidgen.go",
       "args": [
         "-v"
-      ]
-    },
-    {
-      "name": "Launch pktdump field",
-      "type": "go",
-      "request": "launch",
-      "mode": "debug",
-      "program": "pktdump.go",
-      "args": [
-        "field",
-        "-F",
-        "./testdata/SimpleStruct.yaml",
-        "-c"
       ]
     },
   ]
