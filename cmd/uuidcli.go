@@ -44,9 +44,10 @@ goidgen uuid --examples
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Print("### in uuid run ...\n")
 		if err := handleUuidParams(cmd, args); err != nil {
 			//cmd.Help()
-			fmt.Printf("\npus command parsing error:\n%v\n", err)
+			fmt.Printf("\nuuid command parsing error:\n%v\n", err)
 			os.Exit(1)
 		}
 	},
@@ -55,7 +56,8 @@ goidgen uuid --examples
 func init() {
 	rootCmd.AddCommand(uuidCmd)
 	uuidCmd.PersistentFlags().BoolVarP(&printUuidExamples, "examples", "", false, "print uuid examples to stdout")
-	uuidCmd.PersistentFlags().StringVarP(&uuidVersionFlag, "uuid-version", "v", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
+	// uuidCmd.PersistentFlags().StringVarP(&uuidVersionFlag, "uuid-version", "v", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
+	uuidCmd.PersistentFlags().StringVarP(&uuidVersionFlag, "uuid-version", "V", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
 	uuidCmd.PersistentFlags().StringVarP(&namespaceID, "namespace", "n", "", "Namespace UUID for name-based UUIDs (version 3 or 5).\nMust be a valid UUID string.")
 	uuidCmd.PersistentFlags().StringVarP(&nameData, "name-data", "N", "", "Name data for name-based UUIDs (version 3 or 5).")
 	uuidCmd.PersistentFlags().StringVarP(&outputFile, "output-file", "o", "", "Output to file instead of stdout.")
@@ -73,6 +75,7 @@ func init() {
 }
 
 func handleUuidParams(cmd *cobra.Command, args []string) error {
+	fmt.Print("### in uuid handleUuidParams ...\n")
 	if len(args) == 0 {
 		cmd.Help()
 		return nil
@@ -92,35 +95,34 @@ Some examples how to use the UUID generator.
 
 Examples:
 
-goidgen uuid ... TBD
-  Generate a random UUID (v4)
-	>	goidgen uuid
-	
-	Generate a time-based UUID (v1)
-	> goidgen uuid -v 1
-	> goidgen uuid -uuid-version 1
-	
-	Generate a time-based sortable UUID (v6)
-	> goidgen uuid -v 6
-	
-	Generate a time-based sortable UUID (v7)
-	> goidgen uuid -v 7                 # 
+Generate a random UUID (v4)
+>	goidgen uuid
 
-	Name-based v3
-	> goidgen uuid -v 3 -n 00000000-0000-0000-0000-000000000000 -N example.com
-	> goidgen uuid -v 3 -n 00000000-0000-0000-0000-000000000000 -name-data example.com
+Generate a time-based UUID (v1)
+> goidgen uuid -v 1
+> goidgen uuid -uuid-version 1
 
-	Name-based v5 (DNS namespace)
-	> goidgen -v 5 -n 6ba7b810-9dad-11d1-80b4-00c04fd430c8 -N www.example.org
-	> goidgen -v 5 --namespace 6ba7b810-9dad-11d1-80b4-00c04fd430c8 -N www.example.org
+Generate a time-based sortable UUID (v6)
+> goidgen uuid -v 6
 
-	Generate 5 random UUIDs
-	> goidgen -c 5
-	> goidgen --num-to-generate 5
+Generate a time-based sortable UUID (v7)
+> goidgen uuid -v 7                 # 
 
-	Output UUID to a file
-	> goidgen	 -o output.txt
-	> goidgen	 -output-file output.txt
+Name-based v3
+> goidgen uuid -v 3 -n 00000000-0000-0000-0000-000000000000 -N example.com
+> goidgen uuid -v 3 -n 00000000-0000-0000-0000-000000000000 -name-data example.com
+
+Name-based v5 (DNS namespace)
+> goidgen -v 5 -n 6ba7b810-9dad-11d1-80b4-00c04fd430c8 -N www.example.org
+> goidgen -v 5 --namespace 6ba7b810-9dad-11d1-80b4-00c04fd430c8 -N www.example.org
+
+Generate 5 random UUIDs
+> goidgen -c 5
+> goidgen --num-to-generate 5
+
+Output UUID to a file
+> goidgen	 -o output.txt
+> goidgen	 -output-file output.txt
 
 `
 }
