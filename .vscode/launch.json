@@ -28,7 +28,7 @@
       ]
     },
     {
-      "name": "Launch pktdump with help",
+      "name": "Launch goidgen with help",
       "type": "go",
       "request": "launch",
       "mode": "debug",
@@ -38,13 +38,24 @@
       ]
     },
     {
-      "name": "Launch pktdump with version",
+      "name": "Launch goidgen with version",
       "type": "go",
       "request": "launch",
       "mode": "debug",
       "program": "goidgen.go",
       "args": [
         "-v"
+      ]
+    },
+    {
+      "name": "Launch goidgen uuid with help",
+      "type": "go",
+      "request": "launch",
+      "mode": "debug",
+      "program": "goidgen.go",
+      "args": [
+        "uuid",
+        "-h"
       ]
     },
   ]
