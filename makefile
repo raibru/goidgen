@@ -58,8 +58,8 @@ TEST_FILES      := $(wildcard *_test.go)
 TEST_FILES      += $(wildcard test/*.go)
 SRCS            := $(filter-out $(wildcard *_test.go), $(wildcard *.go))
 SRCS_TEST       := ./...
-BIN_DIR         := ./bin
-BIN_DIR_DEV     := $(BIN_DIR)/dev
+BUILD_DIR       := ./build
+BUILD_DIR_DEV   := $(BUILD_DIR)/dev
 RUNTIME_DEV     := ./runtime/develop
 
 #GO_FLAGS			   := -v gcflags=\"-m\"
@@ -69,7 +69,7 @@ GO_LDFLAGS      = -ldflags="-X github.com/raibru/$(PROJECT)/cmd.buildInfo=$(BUIL
 CLEAN_FILES 	  :=                    \
 									tags                \
 									$(wildcard ./tmp/*) \
-									./$(BIN_DIR_DEV)/*
+									./$(BUILD_DIR_DEV)/*
 
 help:
 	-@echo "Makefile with following options (make <option>):"
@@ -130,19 +130,19 @@ run:
 build:
 	$(eval BUILD_NUM := $(shell expr `cat .buildnum 2>/dev/null` + 1 >.buildnum && cat .buildnum))
 	$(eval BUILD_INFO := $(BUILD_HASH).$(BUILD_NUM)-($(BUILD_HOST))-($(BUILD_DATE)))
-	$(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BIN_DIR_DEV)/$(BIN_FILE) $(MAIN_FILE)
+	$(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BUILD_DIR_DEV)/$(BIN_FILE) $(MAIN_FILE)
 
 build-windows:
-	GOOS=windows GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BIN_DIR)/windows/amd64/$(BIN_FILE).exe $(MAIN_FILE)
+	GOOS=windows GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BUILD_DIR)/windows/amd64/$(BIN_FILE).exe $(MAIN_FILE)
 
 build-linux:
-	GOOS=linux GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BIN_DIR)/linux/amd64/$(BIN_FILE) $(MAIN_FILE)
+	GOOS=linux GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BUILD_DIR)/linux/amd64/$(BIN_FILE) $(MAIN_FILE)
 
 build-deploy: build build-windows build-linux
 	-@echo "Build deployment versions..."
 
 deploy-dev:
-	cp $(BIN_DIR_DEV)/$(BIN_FILE) $(RUNTIME_DEV)/$(BIN_FILE)
+	cp $(BUILD_DIR_DEV)/$(BIN_FILE) $(RUNTIME_DEV)/$(BIN_FILE)
 
 ctags:
 	ctags -RV .

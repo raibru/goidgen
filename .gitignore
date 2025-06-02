@@ -5,6 +5,7 @@
 *.so
 *.dylib
 bin/*
+build/*
 .buildnum
 
 # Test binary, built with `go test -c`
