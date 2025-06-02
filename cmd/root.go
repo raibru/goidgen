@@ -35,7 +35,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&prtVersion, "version", "v", false, "display goitgen version")
+	rootCmd.PersistentFlags().BoolVarP(&prtVersion, "version", "v", false, "display goidgen simple version")
 }
 
 func handleGlobalParams(cmd *cobra.Command, args []string) error {

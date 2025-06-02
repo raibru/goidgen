@@ -37,7 +37,7 @@ func PrintFullVersion(w io.Writer) {
 // edenCmd represents the eden dump command
 var versionCmd = &cobra.Command{
 	Use:   "version",
-	Short: "version of goidgen",
+	Short: "full version info of goidgen",
 	Long: `
 
 goidgen version
