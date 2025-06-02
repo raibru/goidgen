@@ -1,0 +1,84 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "make run",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "run"
+      ]
+    },
+    {
+      "label": "make tdd",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "tdd"
+      ],
+      "problemMatcher": [],
+      //"group": {
+      //  "kind": "build",
+      //  "isDefault": true
+      //}
+    },
+    {
+      "label": "make test",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "test"
+      ]
+    },
+    {
+      "label": "make clean",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "clean"
+      ]
+    },
+    {
+      "label": "make cover",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "test-coverage"
+      ]
+    },
+    {
+      "label": "make build",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "build"
+      ]
+    },
+    {
+      "label": "make build linux",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "build-linux"
+      ]
+    },
+    {
+      "label": "make build windows",
+      "type": "shell",
+      "group": "build",
+      "command": "make",
+      "args": [
+        "build-windows"
+      ]
+    },
+  ]
+}
