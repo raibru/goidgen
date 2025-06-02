@@ -74,6 +74,7 @@ CLEAN_FILES 	  :=                    \
 help:
 	-@echo "Makefile with following options (make <option>):"
 	-@echo "	clean"
+	-@echo "	clean-all"
 	-@echo "	tdd"
 	-@echo "	test"
 	-@echo "	test-cover"
@@ -101,6 +102,11 @@ deploy-all: clean test build build-windows build-linux deploy-dev
 clean:
 	$(GO) clean
 	rm -f $(CLEAN_FILES)
+	rm -r $(BUILD_DIR_DEV)
+
+clean-all:
+	$(GO) clean
+	rm -r $(BUILD_DIR)
 
 tdd:
 	@$(GRC) $(GO_PREFIX) $(GO) test ./... 
