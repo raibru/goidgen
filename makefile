@@ -98,6 +98,8 @@ print:
 .PHONY: all deploy-all clean tdd test test-cover test-cache test-verbose test-trace-view test-coverage
 all: test build
 deploy-all: clean test build build-windows build-linux deploy-dev
+build-new: clean build
+
 
 clean:
 	$(GO) clean
@@ -133,15 +135,15 @@ test-coverage: $(TEST_FILES) $(SRCS)
 run:
 	$(GO) run $(GO_FLAGS) $(MAIN_FILE)
 
-build:
+build: $(SRCS)
 	$(eval BUILD_NUM := $(shell expr `cat .buildnum 2>/dev/null` + 1 >.buildnum && cat .buildnum))
 	$(eval BUILD_INFO := $(BUILD_HASH).$(BUILD_NUM)-($(BUILD_HOST))-($(BUILD_DATE)))
 	$(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BUILD_DIR_DEV)/$(BIN_FILE) $(MAIN_FILE)
 
-build-windows:
+build-windows: $(SRCS)
 	GOOS=windows GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BUILD_DIR)/windows/amd64/$(BIN_FILE).exe $(MAIN_FILE)
 
-build-linux:
+build-linux: $(SRCS)
 	GOOS=linux GOARCH=amd64 $(GO) build $(GO_FLAGS) $(GO_LDFLAGS) -o $(BUILD_DIR)/linux/amd64/$(BIN_FILE) $(MAIN_FILE)
 
 build-deploy: build build-windows build-linux
