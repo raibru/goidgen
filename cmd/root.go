@@ -39,6 +39,10 @@ func init() {
 }
 
 func handleGlobalParams(cmd *cobra.Command, args []string) error {
+	// Go lint behavior
+	_ = cmd
+	_ = args
+
 	if prtVersion {
 		PrintVersion(os.Stdout)
 	} else {

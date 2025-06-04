@@ -56,6 +56,9 @@ func init() {
 }
 
 func handleVersionParams(cmd *cobra.Command, args []string) error {
+	// Go lint behavior
+	_ = cmd
+	_ = args
 	PrintFullVersion(os.Stdout)
 	return nil
 }
