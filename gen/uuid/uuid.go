@@ -3,7 +3,7 @@ package uuid
 import (
 	"crypto/md5"
 	"crypto/sha1"
-	"flag"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -13,71 +13,96 @@ import (
 	"github.com/google/uuid"
 )
 
-// Definiere die Kommandozeilen-Flags
-var (
-	versionFlag = flag.String("v", "4", "UUID version to generate: 1 (time-based), 3 (name-MD5), 4 (random), 5 (name-SHA1), 6 (time-based sortable), 7 (time-based sortable). Default is 4.")
-	namespaceID = flag.String("n", "", "Namespace UUID for name-based UUIDs (version 3 or 5). Must be a valid UUID string.")
-	nameData    = flag.String("N", "", "Name data for name-based UUIDs (version 3 or 5).")
-	outputFile  = flag.String("o", "", "Output to file instead of stdout.")
-	numUUIDs    = flag.Int("c", 1, "Number of UUIDs to generate.")
-)
+type GenerateParam struct {
+	UuidVersionFlag string
+	NamespaceID     string
+	NameData        string
+	OutputFile      string
+	NumUUIDs        int
+	ToUppercases    bool
+}
 
-func UuidGenerate() {
-
+func DumpId(ids []string, param *GenerateParam) error {
 	var writer io.Writer = os.Stdout
-	if *outputFile != "" {
-		f, err := os.Create(*outputFile)
+	if param.OutputFile != "" {
+		f, err := os.Create(param.OutputFile)
 		if err != nil {
 			log.Fatalf("Failed to create output file: %v", err)
+			return err
 		}
 		defer f.Close()
 		writer = f
 	}
 
-	for i := 0; i < *numUUIDs; i++ {
+	for _, v := range ids {
+		fmt.Fprintln(writer, v)
+	}
+
+	return nil
+}
+
+func GenerateId(param *GenerateParam) ([]string, error) {
+
+	var values []string = []string{}
+	var err error
+
+	for i := 0; i < param.NumUUIDs; i++ {
 		var u uuid.UUID
 		var err error
 
-		switch *versionFlag {
+		switch param.UuidVersionFlag {
 		case "1":
 			u, err = uuid.NewUUID()
+			if err != nil {
+				log.Fatalf("Failure generate new UUID: %v", err)
+			}
 		case "3":
-			if *namespaceID == "" || *nameData == "" {
+			if param.NamespaceID == "" || param.NameData == "" {
 				log.Fatal("For version 3 UUIDs, -n (namespace) and -N (name) are required.")
 			}
-			ns, parseErr := uuid.Parse(*namespaceID)
+			ns, parseErr := uuid.Parse(param.NamespaceID)
 			if parseErr != nil {
 				log.Fatalf("Invalid namespace UUID: %v", parseErr)
 			}
-			u = uuid.NewMD5(ns, []byte(*nameData))
+			u = uuid.NewMD5(ns, []byte(param.NameData))
 		case "4":
-			//u = uuid.NewRandom()
+			u, err = uuid.NewRandom()
+			if err != nil {
+				log.Fatalf("Failure generate new UUID random value: %v", err)
+			}
 		case "5":
-			if *namespaceID == "" || *nameData == "" {
+			if param.NamespaceID == "" || param.NameData == "" {
 				log.Fatal("For version 5 UUIDs, -n (namespace) and -N (name) are required.")
 			}
-			ns, parseErr := uuid.Parse(*namespaceID)
+			ns, parseErr := uuid.Parse(param.NamespaceID)
 			if parseErr != nil {
 				log.Fatalf("Invalid namespace UUID: %v", parseErr)
 			}
-			u = uuid.NewSHA1(ns, []byte(*nameData))
+			u = uuid.NewSHA1(ns, []byte(param.NameData))
 		case "6":
 			u, err = uuid.NewV6()
 		case "7":
 			u, err = uuid.NewV7()
 		default:
-			log.Fatalf("Unsupported UUID version: %s. Supported versions are 1, 3, 4, 5, 6, 7.", *versionFlag)
+			log.Fatalf("Unsupported UUID version: %s. Supported versions are 1, 3, 4, 5, 6, 7.", param.UuidVersionFlag)
+			err = errors.New("Unsupported UUID version")
 		}
 
 		if err != nil {
-			log.Fatalf("Failed to generate UUID: %v", err)
+			log.Fatalf("Generaton failure for UUID: %v", err)
 		}
 
 		// Standardmäßig Kleinbuchstaben, wie bei den meisten uuidgen-Implementierungen
 		// Für Großbuchstaben könnte man hier strings.ToUpper(u.String()) verwenden,
 		// aber uuidgen gibt standardmäßig Kleinbuchstaben aus.
-		fmt.Fprintln(writer, strings.ToLower(u.String()))
+		if param.ToUppercases {
+			values = append(values, strings.ToUpper(u.String()))
+		} else {
+			values = append(values, strings.ToLower(u.String()))
+		}
 	}
+
+	return values, err
 }
 
 // Hilfsfunktion zur Hash-Berechnung für MD5/SHA1 (nicht direkt für uuid.NewMD5/NewSHA1 benötigt,
