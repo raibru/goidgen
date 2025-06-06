@@ -19,16 +19,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/raibru/goidgen/gen/uuid"
 	"github.com/spf13/cobra"
 )
 
 var (
 	printUuidExamples bool
-	uuidVersionFlag   string
-	namespaceID       string
-	nameData          string
-	outputFile        string
-	numUUIDs          int
+	uuidParam         uuid.GenerateParam
 )
 
 // pusCmd represents the pus command
@@ -36,7 +33,7 @@ var uuidCmd = &cobra.Command{
 	Use:   "uuid",
 	Short: "Create diffrent UUID values handle in data",
 	Long: `
-Create diffrent UUID values handled in data generations.
+Create different UUID values handled in data generations.
 
 Execute for further information
 
@@ -44,7 +41,6 @@ goidgen uuid --examples
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Print("### in uuid run ...\n")
 		if err := handleUuidParams(cmd, args); err != nil {
 			//cmd.Help()
 			fmt.Printf("\nuuid command parsing error:\n%v\n", err)
@@ -56,12 +52,12 @@ goidgen uuid --examples
 func init() {
 	rootCmd.AddCommand(uuidCmd)
 	uuidCmd.PersistentFlags().BoolVarP(&printUuidExamples, "examples", "", false, "print uuid examples to stdout")
-	// uuidCmd.PersistentFlags().StringVarP(&uuidVersionFlag, "uuid-version", "v", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
-	uuidCmd.PersistentFlags().StringVarP(&uuidVersionFlag, "uuid-version", "V", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
-	uuidCmd.PersistentFlags().StringVarP(&namespaceID, "namespace", "n", "", "Namespace UUID for name-based UUIDs (version 3 or 5).\nMust be a valid UUID string.")
-	uuidCmd.PersistentFlags().StringVarP(&nameData, "name-data", "N", "", "Name data for name-based UUIDs (version 3 or 5).")
-	uuidCmd.PersistentFlags().StringVarP(&outputFile, "output-file", "o", "", "Output to file instead of stdout.")
-	uuidCmd.PersistentFlags().IntVarP(&numUUIDs, "num-to-generate", "c", 1, "Number of UUIDs to generate.")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.UuidVersionFlag, "uuid-version", "V", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.NamespaceID, "namespace", "n", "", "Namespace UUID for name-based UUIDs (version 3 or 5).\nMust be a valid UUID string.")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.NameData, "name-data", "N", "", "Name data for name-based UUIDs (version 3 or 5).")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.OutputFile, "output-file", "o", "", "Output to file instead of stdout.")
+	uuidCmd.PersistentFlags().IntVarP(&uuidParam.NumUUIDs, "num-to-generate", "c", 1, "Number of UUIDs to generate.")
+	uuidCmd.PersistentFlags().BoolVarP(&uuidParam.ToUppercases, "uppercase", "u", false, "print uuid letters in uppercase. Default is lowercase")
 
 	// Here you will define your flags and configuration settings.
 
@@ -75,15 +71,26 @@ func init() {
 }
 
 func handleUuidParams(cmd *cobra.Command, args []string) error {
-	fmt.Print("### in uuid handleUuidParams ...\n")
-	if len(args) == 0 {
-		cmd.Help()
-		return nil
-	}
+	//if len(args) == 0 {
+	//	cmd.Help()
+	//	return nil
+	//}
 
 	if printUuidExamples {
 		fmt.Printf("\n%s\n\n", uuidExamples())
 		return nil
+	}
+
+	result, err := uuid.GenerateId(&uuidParam)
+	if err != nil {
+		fmt.Printf("Failed generating uuid: %v", err)
+		return err
+	}
+
+	err = uuid.DumpId(result, &uuidParam)
+	if err != nil {
+		fmt.Printf("Failed dumping uuid: %v", err)
+		return err
 	}
 
 	return nil
