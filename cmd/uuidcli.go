@@ -36,11 +36,11 @@ goidgen uuid --examples
 func init() {
 	rootCmd.AddCommand(uuidCmd)
 	uuidCmd.PersistentFlags().BoolVarP(&printUuidExamples, "examples", "", false, "print uuid examples to stdout")
-	uuidCmd.PersistentFlags().StringVarP(&uuidParam.UuidVersionFlag, "uuid-version", "V", "4", "UUID version to generate - Default is 4:\n\t- 1 (time-based),\n\t- 3 (name-MD5),\n\t- 4 (random),\n\t- 5 (name-SHA1),\n\t- 6 (time-based sortable),\n\t- 7 (time-based sortable).")
-	uuidCmd.PersistentFlags().StringVarP(&uuidParam.NamespaceID, "namespace", "n", "", "Namespace UUID for name-based UUIDs (version 3 or 5).\nMust be a valid UUID string.")
-	uuidCmd.PersistentFlags().StringVarP(&uuidParam.NameData, "name-data", "N", "", "Name data for name-based UUIDs (version 3 or 5).")
-	uuidCmd.PersistentFlags().StringVarP(&uuidParam.OutputFile, "output-file", "o", "", "Output to file instead of stdout.")
-	uuidCmd.PersistentFlags().IntVarP(&uuidParam.NumUUIDs, "num-to-generate", "c", 1, "Number of UUIDs to generate.")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.UuidVersionFlag, "uuid-version", "V", "4", "use UUID version to generate:\n\t(1) time-based,\n\t(3) name-MD5,\n\t(4) random,\n\t(5) name-SHA1,\n\t(6) time-based sortable,\n\t(7) time-based sortable\n")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.NamespaceID, "namespace", "n", "", "namespace UUID for name-based UUIDs (version 3 or 5).\nMust be a valid UUID string.")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.NameData, "name-data", "N", "", "name data for name-based UUIDs (version 3 or 5).")
+	uuidCmd.PersistentFlags().StringVarP(&uuidParam.OutputFile, "output-file", "o", "", "output to file instead of stdout.")
+	uuidCmd.PersistentFlags().IntVarP(&uuidParam.NumUUIDs, "num-to-generate", "c", 1, "number of UUIDs to generate.")
 	uuidCmd.PersistentFlags().BoolVarP(&uuidParam.ToUppercases, "uppercase", "u", false, "print uuid letters in uppercase. Default is lowercase")
 
 	// Here you will define your flags and configuration settings.
