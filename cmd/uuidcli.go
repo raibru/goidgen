@@ -65,6 +65,12 @@ func handleUuidParams(cmd *cobra.Command, args []string) error {
 		return nil
 	}
 
+	err := uuid.Validate(&uuidParam)
+	if err != nil {
+		fmt.Printf("Failed validating uuid parameter: %v", err)
+		return err
+	}
+
 	result, err := uuid.GenerateId(&uuidParam)
 	if err != nil {
 		fmt.Printf("Failed generating uuid: %v", err)

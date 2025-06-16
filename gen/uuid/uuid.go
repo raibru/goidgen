@@ -105,6 +105,10 @@ func GenerateId(param *GenerateParam) ([]string, error) {
 	return values, err
 }
 
+func Validate(param *GenerateParam) error {
+	return nil
+}
+
 // Hilfsfunktion zur Hash-Berechnung für MD5/SHA1 (nicht direkt für uuid.NewMD5/NewSHA1 benötigt,
 // da diese Funktionen das intern übernehmen, aber nützlich zum Verständnis der Namens-UUIDs)
 func hashData(data []byte, hashType string) string {
