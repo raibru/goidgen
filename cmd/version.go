@@ -11,7 +11,7 @@ import (
 // var section
 var (
 	major = "0"
-	minor = "1"
+	minor = "3"
 	patch = "0"
 	//buildTag  = "-"
 	//buildDate = "-"
