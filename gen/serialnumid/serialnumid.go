@@ -13,6 +13,7 @@ type GenerateParam struct {
 	SartNum     int
 	NumCount    int
 	CleanNum    bool
+	Force       bool
 	TmpDataFile string
 	OutputFile  string
 }
@@ -41,7 +42,7 @@ func GenerateId(param *GenerateParam) ([]string, error) {
 
 	sn, err := ReadSerialNumber(param)
 	if err != nil {
-		log.Fatal("Failre parse peristed serial number from file")
+		log.Fatal("Failed parsing persited serial number from file")
 		return values, err
 	}
 
@@ -75,7 +76,7 @@ func ReadSerialNumber(param *GenerateParam) (serialNum int, err error) {
 func WriteSerialNumber(serialNum int, param *GenerateParam) error {
 	f, err := os.Create(param.TmpDataFile)
 	if err != nil {
-		log.Fatal("Failed to access temp serial number file")
+		log.Fatal("Failed accessing temp serial number file")
 		return err
 	}
 	defer f.Close()
