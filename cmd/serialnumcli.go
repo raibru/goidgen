@@ -43,7 +43,6 @@ func init() {
 	serialNumIdCmd.PersistentFlags().BoolVarP(&serialNumIdParam.CleanNum, "clean-serial-number", "c", false, "cleanup of counter in temp-file")
 	serialNumIdCmd.PersistentFlags().StringVarP(&serialNumIdParam.TmpDataFile, "temp-file", "t", "./sernum.dat", "location and filename containing serial number.")
 	serialNumIdCmd.PersistentFlags().StringVarP(&serialNumIdParam.OutputFile, "output-file", "o", "", "output to file instead of stdout.")
-	serialNumIdCmd.PersistentFlags().BoolVarP(&serialNumIdParam.Force, "force", "f", false, "ignore failure when tmp-file not exists")
 
 	// Here you will define your flags and configuration settings.
 
