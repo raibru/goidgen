@@ -10,11 +10,12 @@ import (
 )
 
 type GenerateParam struct {
-	SartNum     int
+	StartNum    int
 	NumCount    int
 	CleanNum    bool
 	TmpDataFile string
 	OutputFile  string
+	UsingId     int
 }
 
 func DumpId(ids []string, param *GenerateParam) error {
@@ -39,22 +40,10 @@ func DumpId(ids []string, param *GenerateParam) error {
 func GenerateId(param *GenerateParam) ([]string, error) {
 	var values []string = []string{}
 
-	sn, err := ReadSerialNumber(param)
-	if err != nil {
-		fmt.Println("Failed parsing persited serial number from file")
-		return values, err
-	}
-
 	for i := 0; i < param.NumCount; i++ {
-		values = append(values, fmt.Sprintf("%d", sn))
-		sn++
+		values = append(values, fmt.Sprintf("%d", param.UsingId))
+		param.UsingId++
 	}
-	err = WriteSerialNumber(sn, param)
-	if err != nil {
-		fmt.Println("Failed saving current serial number into file")
-		return values, err
-	}
-
 	return values, nil
 }
 
@@ -62,14 +51,14 @@ func Validate(param *GenerateParam) error {
 	return nil
 }
 
-func ReadSerialNumber(param *GenerateParam) (serialNum int, err error) {
-	serialNum = 0
+func ReadSerialNumber(param *GenerateParam) error {
+	param.UsingId = 0
 	file, err := os.Open(param.TmpDataFile)
 	if errors.Is(err, os.ErrNotExist) {
-		serialNum = 1 // start from 1 when not exists
-		return serialNum, nil
+		param.UsingId = 1 // start from 1 when not exists
+		return nil
 	} else if err != nil {
-		return serialNum, err
+		return err
 	}
 	defer file.Close()
 
@@ -78,18 +67,18 @@ func ReadSerialNumber(param *GenerateParam) (serialNum int, err error) {
 	for sc.Scan() {
 		if n == 0 {
 			line := sc.Text()
-			serialNum, err = strconv.Atoi(line)
+			param.UsingId, err = strconv.Atoi(line)
 			if err != nil {
 				fmt.Println("Failed converting serial numberfrom file content")
-				return serialNum, err
+				return err
 			}
 		}
 		n++
 	}
-	return serialNum, nil
+	return nil
 }
 
-func WriteSerialNumber(serialNum int, param *GenerateParam) error {
+func WriteSerialNumber(param *GenerateParam) error {
 	f, err := os.Create(param.TmpDataFile)
 	if err != nil {
 		fmt.Println("Failed accessing temp serial number file")
@@ -97,7 +86,7 @@ func WriteSerialNumber(serialNum int, param *GenerateParam) error {
 	}
 	defer f.Close()
 
-	fmt.Fprintf(f, "%d\n", serialNum)
+	fmt.Fprintf(f, "%d\n", param.UsingId)
 
 	return nil
 }

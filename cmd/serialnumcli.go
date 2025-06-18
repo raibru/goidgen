@@ -38,7 +38,7 @@ goidgen serial-num-id --examples
 func init() {
 	rootCmd.AddCommand(serialNumIdCmd)
 	serialNumIdCmd.PersistentFlags().BoolVarP(&printSerialNumIdExamples, "examples", "", false, "print serialNumId examples to stdout.")
-	serialNumIdCmd.PersistentFlags().IntVarP(&serialNumIdParam.SartNum, "start-number", "s", 1, "number start serial number counting")
+	serialNumIdCmd.PersistentFlags().IntVarP(&serialNumIdParam.StartNum, "start-number", "s", 1, "number start serial number counting")
 	serialNumIdCmd.PersistentFlags().IntVarP(&serialNumIdParam.NumCount, "number-count", "n", 1, "number of generated serial numbers")
 	serialNumIdCmd.PersistentFlags().BoolVarP(&serialNumIdParam.CleanNum, "clean-serial-number", "c", false, "cleanup of counter in temp-file")
 	serialNumIdCmd.PersistentFlags().StringVarP(&serialNumIdParam.TmpDataFile, "temp-file", "t", "./sernum.dat", "location and filename containing serial number.")
@@ -80,6 +80,12 @@ func handleSerialNumIdParams(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	err = serialnumid.ReadSerialNumber(&serialNumIdParam)
+	if err != nil {
+		fmt.Println("Failed parsing persited serial number from file")
+		return err
+	}
+
 	result, err := serialnumid.GenerateId(&serialNumIdParam)
 	if err != nil {
 		fmt.Printf("Failed generating serial number id")
@@ -89,6 +95,12 @@ func handleSerialNumIdParams(cmd *cobra.Command, args []string) error {
 	err = serialnumid.DumpId(result, &serialNumIdParam)
 	if err != nil {
 		fmt.Printf("Failed dumping serial number id")
+		return err
+	}
+
+	err = serialnumid.WriteSerialNumber(&serialNumIdParam)
+	if err != nil {
+		fmt.Println("Failed saving current serial number into file")
 		return err
 	}
 
