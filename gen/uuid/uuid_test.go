@@ -10,7 +10,7 @@ import (
 var wantUuidRegexLow = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 var wantUuidRegexHigh = regexp.MustCompile(`^[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}$`)
 
-func Test_GenerateUuids_UuidVersion_4_Successful(t *testing.T) {
+func Test_GenerateUuids_UuidVersion_V4_Successful(t *testing.T) {
 	//t.Fatal("Check RED Test")
 	tests := []struct {
 		uuidCount     int
@@ -19,6 +19,9 @@ func Test_GenerateUuids_UuidVersion_4_Successful(t *testing.T) {
 	}{
 		{1, false, 1},
 		{1, true, 1},
+		{2, true, 2},
+		{10, true, 10},
+		{1000, true, 1000},
 	}
 
 	for _, tt := range tests {
@@ -30,42 +33,23 @@ func Test_GenerateUuids_UuidVersion_4_Successful(t *testing.T) {
 
 		result, err := uuid.GenerateId(&uuidParam)
 		if err != nil {
-			t.Errorf("Test failed due err %v", err)
+			t.Errorf("Expected no error for V1, got %v", err)
 		}
 		if len(result) != tt.wantUuidCount {
-			t.Errorf("Test failed want uuid count: %d but got: %d", tt.uuidCount, len(result))
+			t.Errorf("Expected uuid count: %d but got: %d", tt.uuidCount, len(result))
 		}
 		for _, uuid := range result {
 			if tt.uuidIsUpper {
 				if !wantUuidRegexHigh.MatchString(uuid) {
-					t.Errorf("Test failed want uuid pattern: %s\n\tbut got: %s", wantUuidRegexHigh, uuid)
+					t.Errorf("Generated ID %s does not match UUID format pattern:\n\t%s", uuid, wantUuidRegexHigh)
 				}
 			} else {
 				if !wantUuidRegexLow.MatchString(uuid) {
-					t.Errorf("Test failed want uuid pattern: %s\n\tbut got: %s", wantUuidRegexHigh, uuid)
+					t.Errorf("Generated ID %s does not match UUID format pattern:\n\t%s", uuid, wantUuidRegexLow)
 				}
 			}
 		}
-
 	}
+}
 
-	//for _, tt := range tests {
-	//	t.Logf("Test TC: [%s]", tt.input)
-	//	data, err := hex.DecodeString(tt.input)
-	//	if err != nil {
-	//		t.Errorf("can not decode hex string [%s]=%v", tt.input, err)
-	//	}
-	//	tc := MakeTelecommand()
-	//	if err := tc.Parse(data); err != nil {
-	//		t.Errorf("can not parse to TC packet [%s]=%v", tt.input, err)
-	//	}
-
-	//	if err := tc.Validate(); err != nil {
-	//		t.Errorf("parsed PUS primary header is not valid: %s", err)
-	//	}
-	//	if packet.ToPacketErrorControlHexString(tc.PacketErrorControl) != tt.expectedCrc {
-	//		t.Errorf("expect parsed packet error control %s but got %04x", tt.expectedCrc, tc.PacketErrorControl)
-	//	}
-	//	//t.Logf("\n%s\n", tc.Dump())
-	//}
 }
