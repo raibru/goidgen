@@ -39,8 +39,8 @@ func init() {
 	rootCmd.AddCommand(serialNumIdCmd)
 	serialNumIdCmd.PersistentFlags().BoolVarP(&printSerialNumIdExamples, "examples", "", false, "print serialNumId examples to stdout.")
 	serialNumIdCmd.PersistentFlags().IntVarP(&serialNumIdParam.StartNum, "start-number", "s", 1, "number start serial number counting")
-	serialNumIdCmd.PersistentFlags().IntVarP(&serialNumIdParam.NumCount, "number-count", "n", 1, "number of generated serial numbers")
-	serialNumIdCmd.PersistentFlags().BoolVarP(&serialNumIdParam.CleanNum, "clean-serial-number", "c", false, "cleanup of counter in temp-file")
+	serialNumIdCmd.PersistentFlags().IntVarP(&serialNumIdParam.NumCount, "number-count", "c", 1, "number of generated serial numbers")
+	serialNumIdCmd.PersistentFlags().BoolVarP(&serialNumIdParam.CleanNum, "remove-serial-number", "r", false, "remove the counter temp-file")
 	serialNumIdCmd.PersistentFlags().StringVarP(&serialNumIdParam.TmpDataFile, "temp-file", "t", "./sernum.dat", "location and filename containing serial number.")
 	serialNumIdCmd.PersistentFlags().StringVarP(&serialNumIdParam.OutputFile, "output-file", "o", "", "output to file instead of stdout.")
 
